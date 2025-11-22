@@ -8,10 +8,9 @@ import java.util.List;
 @Data
 @AllArgsConstructor
 public class Chef {
-    Long id;
-    String firstName;
-    String lastName;
-    String bio;
-    List<Dish> dishes;
-
+    private Long id;
+    private String firstName;
+    private String lastName;
+    private String bio;
+    private List<Dish> dishes;
 }

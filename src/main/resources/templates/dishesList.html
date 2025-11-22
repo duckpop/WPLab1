@@ -1,66 +1,108 @@
 <!DOCTYPE html>
-<html>
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="utf-8">
+    <meta charset="utf-8" />
     <title>Add Dish to Chef</title>
-    <style type="text/css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <style>
         body {
-            width: 800px;
-            margin: auto;
-            font-family: Arial, sans-serif;
+            max-width: 900px;
+            margin: 2rem auto;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        header h1 {
+            text-align: center;
+            margin-bottom: 2rem;
+            color: #2c3e50;
+            font-weight: 700;
+        }
+        section {
+            width: 65%;
+            float: left;
+        }
+        aside {
+            width: 30%;
+            float: right;
         }
         table {
             width: 100%;
-            margin-top: 20px;
             border-collapse: collapse;
-        }
-        table, td, th {
-            border: 1px solid black;
-            padding: 10px;
+            margin-top: 1rem;
         }
         th {
-            background-color: #4CAF50;
+            background-color: #198754;
             color: white;
+            padding: 0.75rem;
+            text-align: left;
         }
-        section {
-            float: left;
-            margin: 0 1.5%;
-            width: 63%;
+        td {
+            border: 1px solid #dee2e6;
+            padding: 0.75rem;
         }
-        aside {
-            float: right;
-            margin: 0 1.5%;
-            width: 30%;
+        .dish-radio {
+            margin-bottom: 0.75rem;
+        }
+        .btn-container {
+            margin-top: 1.5rem;
+        }
+        /* Clear floats */
+        main::after {
+            content: "";
+            display: table;
+            clear: both;
         }
     </style>
 </head>
 <body>
+
 <header>
-    <h1>Select the Dish to add to the Chef</h1>
+    <h1>Select the Dish to Add to the Chef</h1>
 </header>
-<section>
-    <h2>Select dish:</h2>
-    <form action="/chefDetails" method="POST">
-        <div th:each="dish : ${dishes}">
-            <input type="radio" name="dishId" th:value="${dish.getDishId()}" />
-            <span th:text="${dish.getName()}"></span>
-            <br/>
-        </div>
-        <input type="hidden" name="chefId" th:value="${chefId}" />
-        <input type="submit" value="Add dish">
-    </form>
-</section>
-<aside>
-    <table>
-        <tr>
-            <td><b>Chef ID</b></td>
-            <td><span th:text="${chefId}"></span></td>
-        </tr>
-        <tr>
-            <td><b>Chef Name</b></td>
-            <td><span th:text="${selectedChef.getFirstName()} "></span> <span th:text="${selectedChef.getLastName()}"></span></td>
-        </tr>
-    </table>
-</aside>
+
+<main>
+
+    <section>
+        <h2>Edit / Add Dishes</h2>
+        <form th:action="@{/dishes}" method="get" class="mb-4">
+            <button type="submit" class="btn btn-outline-primary">Edit / Add Dish</button>
+        </form>
+
+        <h2>Select Dish:</h2>
+        <form th:action="@{/chefDetails}" method="post">
+            <div th:each="dish : ${dishes}" class="dish-radio form-check">
+                <input class="form-check-input" type="radio"
+                       id="dishRadio__${dish.dishId}"
+                       name="dishId" th:value="${dish.dishId}" required />
+                <label class="form-check-label" th:for="'dishRadio__' + ${dish.dishId}" th:text="${dish.name}">Dish Name</label>
+            </div>
+
+            <input type="hidden" name="chefId" th:value="${chefId}" />
+
+            <div class="btn-container">
+                <button type="submit" class="btn btn-success">Add Dish</button>
+            </div>
+        </form>
+    </section>
+
+    <aside>
+        <table class="table table-bordered">
+            <tr>
+                <th scope="row">Chef ID</th>
+                <td><span th:text="${chefId}">Chef ID</span></td>
+            </tr>
+            <tr>
+                <th scope="row">Chef Name</th>
+                <td>
+                    <span th:text="${selectedChef.firstName}">FirstName</span>
+                    <span th:text="${selectedChef.lastName}">LastName</span>
+                </td>
+            </tr>
+        </table>
+    </aside>
+
+</main>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
 </body>
 </html>
