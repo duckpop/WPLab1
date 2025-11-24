@@ -63,12 +63,49 @@
         </form>
     </section>
 
+    <section>
+        <table class="table table-striped">
+            <thead>
+            <tr>
+                <th>First Name</th>
+                <th>Last Name</th>
+                <th>Bio</th>
+                <th>ID</th>
+                <th>Actions</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="chef : ${chefs}">
+                <td th:text="${chef.firstName}">First Name</td>
+                <td th:text="${chef.lastName}">Last Name</td>
+                <td th:text="${chef.bio}">Bio</td>
+                <td th:text="${chef.id}">ID</td>
+                <td>
+                    <a th:href="@{'/chefs/chef-form/' + ${chef.id}}" class="btn btn-primary btn-sm">Edit</a>
+
+                    <form th:action="@{'/chefs/delete/' + ${chef.id}}" method="post" style="display:inline;">
+                        <button type="submit" class="btn btn-danger btn-sm"
+                                onclick="return confirm('Are you sure you want to delete this dish?');">
+                            Delete
+                        </button>
+                    </form>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </section>
+
     <section class="btn-container">
         <form th:action="@{/dishes}" method="get">
             <button type="submit" class="btn btn-outline-secondary btn-lg">
                 Edit / Add Dish
             </button>
         </form>
+        <form th:action="@{/chefs/chef-form}" method="get">
+        <button type="submit" class="btn btn-outline-secondary btn-lg">
+            Edit / Add Chef
+        </button>
+    </form>
     </section>
 
 </main>
