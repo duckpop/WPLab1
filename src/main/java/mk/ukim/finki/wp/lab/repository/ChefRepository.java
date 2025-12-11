@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public interface ChefRepository extends JpaRepository<Chef,Long> {
+public interface ChefRepository extends JpaSpecificationRepository<Chef,Long> {
     List<Chef> findAll();
     Optional<Chef> findById(Long id);
     Chef save(Chef chef);

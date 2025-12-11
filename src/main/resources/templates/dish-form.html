@@ -34,6 +34,24 @@
                    th:value="${dish?.preparationTime}" required />
         </div>
 
+        <div class="mb-3">
+            <label for="rank" class="form-label">Rank</label>
+            <select id="rank" name="rank" class="form=control" th:value="${dish?.rating}">
+                <option th:each="rank : ${ranks}"
+                        th:text="${rank}"
+                        th:value="${rank}"
+                        th:selected="${dish?.rank == rank}"
+                >
+
+            </select>
+        </div>
+
+        <div class="mb-3">
+            <label for="rating" class="form-label">rating</label>
+            <input type="number" step="0.1" id="rating" name="rating" min="1" class="form-control"
+                   th:value="${dish?.rating}" required />
+        </div>
+
         <button type="submit" class="btn btn-primary"
                 th:text="(${dish?.ID} == null) ? 'Add Dish' : 'Save Changes'"></button>
 

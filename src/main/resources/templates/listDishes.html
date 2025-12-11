@@ -5,6 +5,44 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"/>
 </head>
 <body>
+
+<div class="container mt-4">
+    <form th:action="@{/dishes}" th:method="GET">
+        <div class="row g-3 align-items-end">
+
+            <div class="col-md-2 form-group">
+                <label for="SearchName" class="form-label">Search by Dish name or Cuisine</label>
+                <input type="text" id="SearchName" name="SearchName" class="form-control" placeholder="Enter Product name or cuisine"/>
+            </div>
+
+            <div class="col-md-2 form-group">
+                <label for="preparationTime" class="form-label">Search by Preparation Time (minutes)</label>
+                <input type="number" id="preparationTime" name="preparationTime" min="1" class="form-control" placeholder="enter prep time"/>
+            </div>
+
+            <div class="col-md-2 form-group">
+                <label for="rank" class="form-label">Search by Rank</label>
+                <select id="rank" name="rank" class="form=control" th:value="${dish?.rating}">
+                    <option th:each="rank : ${ranks}"
+                            th:text="${rank}"
+                            th:value="${rank}"
+                            th:selected="${dish?.rank == rank && rank != null}"
+                    >
+                </select>
+            </div>
+
+            <div class="col-mb-2 form-group">
+                <label for="rating" class="form-label">Search by rating</label>
+                <input type="number" step="0.1" id="rating" name="rating" min="1" class="form-control" placeholder="enter rating"/>
+            </div>
+
+            <div class="col-12 mb-1">
+                <button class="btn btn-primary w-100" type="submit">Search</button>
+            </div>
+        </div>
+    </form>
+</div>
+
 <div class="container mt-4">
     <h2>Dishes</h2>
 
@@ -21,6 +59,8 @@
             <th>Preparation Time (min)</th>
             <th>ID</th>
             <th>Actions</th>
+            <th>Rank</th>
+            <th>Rating</th>
         </tr>
         </thead>
         <tbody>
@@ -29,8 +69,10 @@
             <td th:text="${dish.name}">Name</td>
             <td th:text="${dish.cuisine}">Cuisine</td>
             <td th:text="${dish.preparationTime}">Prep Time</td>
+            <td th:text="${dish.rank}">Rank</td>
+            <td th:text="${dish.rating}">Rating</td>
             <td th:text="${dish.ID}">ID</td>
-            <td>
+            <td >
                 <a th:href="@{'/dishes/dish-form/' + ${dish.ID}}" class="btn btn-primary btn-sm">Edit</a>
 
                 <form th:action="@{'/dishes/delete/' + ${dish.ID}}" method="post" style="display:inline;">
