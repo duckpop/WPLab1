@@ -1,5 +1,6 @@
 package mk.ukim.finki.wp.lab.web.controller;
 
+import mk.ukim.finki.wp.lab.model.Chef;
 import mk.ukim.finki.wp.lab.model.Dish;
 import mk.ukim.finki.wp.lab.service.DishService;
 import org.springframework.ui.Model;
@@ -75,6 +76,7 @@ public class DishController {
             @RequestParam String cuisine,
             @RequestParam int preparationTime
     ){
+        System.out.println(ID + " " + dishId + " " + name + " " + cuisine + " " + preparationTime);
         dishService.update(ID, dishId, name, cuisine, preparationTime);
         return "redirect:/dishes";
     }

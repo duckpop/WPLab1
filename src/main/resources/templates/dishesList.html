@@ -62,26 +62,27 @@
 <main>
 
     <section>
-        <h2>Edit / Add Dishes</h2>
         <form th:action="@{/dishes}" method="get" class="mb-4">
             <button type="submit" class="btn btn-outline-primary">Edit / Add Dish</button>
         </form>
 
-        <h2>Select Dish:</h2>
-        <form th:action="@{/chefDetails}" method="post">
-            <div th:each="dish : ${dishes}" class="dish-radio form-check">
-                <input class="form-check-input" type="radio"
-                       id="dishRadio__${dish.dishId}"
-                       name="dishId" th:value="${dish.dishId}" required />
-                <label class="form-check-label" th:for="'dishRadio__' + ${dish.dishId}" th:text="${dish.name}">Dish Name</label>
-            </div>
+        <section th:if="${dishes != null and !dishes.isEmpty()}">
+            <h2>Select Dish:</h2>
+            <form th:action="@{/chefDetails}" method="post">
+                <div th:each="dish : ${dishes}" class="dish-radio form-check">
+                    <input class="form-check-input" type="radio"
+                           id="dishRadio__${dish.dishId}"
+                           name="dishId" th:value="${dish.dishId}" required />
+                    <label class="form-check-label" th:for="'dishRadio__' + ${dish.dishId}" th:text="${dish.name}">Dish Name</label>
+                </div>
 
-            <input type="hidden" name="chefId" th:value="${chefId}" />
+                <input type="hidden" name="chefId" th:value="${chefId}" />
 
-            <div class="btn-container">
-                <button type="submit" class="btn btn-success">Add Dish</button>
-            </div>
-        </form>
+                <div class="btn-container">
+                    <button type="submit" class="btn btn-success">Add Dish</button>
+                </div>
+            </form>
+        </section>
     </section>
 
     <aside>

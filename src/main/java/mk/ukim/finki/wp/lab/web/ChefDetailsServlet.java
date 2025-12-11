@@ -30,7 +30,9 @@ public class ChefDetailsServlet extends HttpServlet {
     }
 
     @Override
-    protected void doPost(HttpServletRequest req, HttpServletResponse resp)throws ServletException, IOException {
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp)
+            throws ServletException, IOException {
+
         String chefIdParam = req.getParameter("chefId");
         String dishId = req.getParameter("dishId");
 
@@ -47,19 +49,18 @@ public class ChefDetailsServlet extends HttpServlet {
             return;
         }
 
-        Chef chef = chefService.findById(chefId);
+        // add dish inside a @Transactional service method
+        chefService.addDishToChef(chefId, dishId);
+
+        // re-load chef, with dishes initialized inside the service
+        Chef chef = chefService.findById(chefId);   // adjust to findByIdWithDishes if you add it
         if (chef == null) {
             resp.sendError(HttpServletResponse.SC_NOT_FOUND, "Chef not found");
             return;
         }
 
-        try {
-            chefService.addDishToChef(chefId, dishId);
-        } catch (IllegalArgumentException e) {
-            resp.sendError(HttpServletResponse.SC_BAD_REQUEST, e.getMessage());
-            return;
-        }
-        List<Dish> ChefDishes = chef.getDishes();
+        // force initialization in service or here (if still in tx); then copy
+        List<Dish> chefDishes = List.copyOf(chef.getDishes());
 
         IWebExchange webExchange = JakartaServletWebApplication
                 .buildApplication(getServletContext())
@@ -67,8 +68,9 @@ public class ChefDetailsServlet extends HttpServlet {
 
         WebContext context = new WebContext(webExchange);
         context.setVariable("selectedChef", chef);
-        context.setVariable("dishes", ChefDishes);
+        context.setVariable("dishes", chefDishes);
 
         templateEngine.process("chefDetails.html", context, resp.getWriter());
     }
+
 }
