@@ -50,7 +50,7 @@ public class DishServiceImpl implements DishService {
         ));
 
         return this.dishRepository.findAll(
-                specification, PageRequest.of(pageNum, pageSize, Sort.by(Sort.Direction.DESC, "name")));
+                specification);
 
     }
 

@@ -15,5 +15,4 @@ public interface DishRepository extends JpaSpecificationRepository<Dish, Long> {
     Dish save(Dish dish);
     void delete(Dish dish);
     List<Dish> findAllByChef_Id(Long chefId);
-    List<Dish> findAll(Specification<Dish> specification, PageRequest name);
 }
