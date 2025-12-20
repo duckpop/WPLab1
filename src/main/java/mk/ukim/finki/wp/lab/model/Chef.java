@@ -18,7 +18,7 @@ public class Chef {
     private String firstName;
     private String lastName;
     private String bio;
-    @OneToMany(mappedBy = "chef")
+    @OneToMany(mappedBy = "chef", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Dish> dishes;
 
     public  Chef(String firstName, String lastName, String bio) {

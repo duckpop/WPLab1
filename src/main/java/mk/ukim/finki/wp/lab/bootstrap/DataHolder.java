@@ -3,9 +3,13 @@ package mk.ukim.finki.wp.lab.bootstrap;
 import jakarta.annotation.PostConstruct;
 import mk.ukim.finki.wp.lab.model.Chef;
 import mk.ukim.finki.wp.lab.model.Dish;
+import mk.ukim.finki.wp.lab.model.User;
 import mk.ukim.finki.wp.lab.model.enums.Rank;
+import mk.ukim.finki.wp.lab.model.enums.Role;
 import mk.ukim.finki.wp.lab.repository.ChefRepository;
 import mk.ukim.finki.wp.lab.repository.DishRepository;
+import mk.ukim.finki.wp.lab.repository.UserRepository;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
@@ -14,16 +18,33 @@ import java.util.List;
 @Component
 public class DataHolder {
 
+    public static List<User> users = null;
+    private final PasswordEncoder passwordEncoder;
+
     private final ChefRepository chefRepository;
     private final DishRepository dishRepository;
+    private final UserRepository userRepository;
 
-    public DataHolder(ChefRepository chefRepository, DishRepository dishRepository) {
+    public DataHolder(PasswordEncoder passwordEncoder, ChefRepository chefRepository, DishRepository dishRepository, UserRepository userRepository) {
+        this.passwordEncoder = passwordEncoder;
         this.chefRepository = chefRepository;
         this.dishRepository = dishRepository;
+        this.userRepository = userRepository;
     }
 
     @PostConstruct
     public void init() {
+
+        if (userRepository.findAll().isEmpty()) {
+            users = new ArrayList<>();
+            users.add(new User("elena.atanasoska", passwordEncoder.encode("ea"), "Elena", "Atanasoska", Role.ROLE_USER));
+            users.add(new User("darko.sasanski", passwordEncoder.encode("ds"), "Darko", "Sasanski", Role.ROLE_USER));
+            users.add(new User("ana.todorovska", passwordEncoder.encode("at"), "Ana", "Todorovska", Role.ROLE_USER));
+            users.add(new User("user", passwordEncoder.encode("user"), "test", "test", Role.ROLE_USER));
+            users.add(new User("admin", passwordEncoder.encode("admin"), "admin", "admin", Role.ROLE_ADMIN));
+            userRepository.saveAll(users);
+        }
+
 
         if (chefRepository.count() == 0) {
 

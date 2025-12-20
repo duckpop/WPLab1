@@ -1,61 +1,53 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-<head>
-    <meta charset="utf-8" />
-    <title>Chef Details</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
-    <style>
-        body {
-            max-width: 900px;
-            margin: 2rem auto;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        }
-        header h1 {
-            color: #2c3e50;
-            font-weight: 700;
-            margin-bottom: 1rem;
-        }
-        section h2 {
-            margin-bottom: 1rem;
-            font-weight: 600;
-            color: #444;
-        }
-        ul.dish-list {
-            list-style: none;
-            padding-left: 0;
-        }
-        ul.dish-list li {
-            background-color: #f8f9fa;
-            border-radius: 5px;
-            padding: 10px 15px;
-            margin-bottom: 8px;
-            font-size: 1rem;
-            color: #3a3a3a;
-        }
-    </style>
-</head>
-<body>
+<div th:fragment="chefDetails" class="w-100">
+    <div class="container-fluid p-4">
 
-<header>
-    <h1>
-        Name: <span th:text="${selectedChef.firstName}">FirstName</span>
-        <span th:text="${selectedChef.lastName}">LastName</span>
-    </h1>
-</header>
+        <h2 th:if="${selectedChef}" class="mb-4">
+            <span th:text="${selectedChef.firstName} + ' ' + ${selectedChef.lastName}"></span>
+        </h2>
 
-<section>
-    <h2 th:text="${selectedChef.bio}">Chef biography goes here.</h2>
+        <!-- Chef Bio -->
+        <div th:if="${selectedChef}" class="card mb-4">
+            <div class="card-body">
+                <p><strong>Bio:</strong> <span th:text="${selectedChef.bio}"></span></p>
+            </div>
+        </div>
 
-    <h2>Dishes prepared by this chef:</h2>
-    <ul class="dish-list">
-        <li th:each="dish : ${dishes}"
-            th:text="|${dish.name} (${dish.cuisine}, ${dish.preparationTime} min)|">
-            Dish details here
-        </li>
-    </ul>
-</section>
+        <!-- Dishes for Chef -->
+        <h3 class="mb-3">Dishes</h3>
 
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+        <div th:if="${!dishes.isEmpty()}" class="table-responsive">
+            <table class="table table-striped">
+                <thead class="table-dark">
+                <tr>
+                    <th>Name</th>
+                    <th>Cuisine</th>
+                    <th>Prep Time</th>
+                    <th>Rank</th>
+                    <th>Rating</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="dish : ${dishes}">
+                    <td th:text="${dish.name}"></td>
+                    <td th:text="${dish.cuisine}"></td>
+                    <td th:text="${dish.preparationTime} + ' min'"></td>
+                    <td th:text="${dish.rank}"></td>
+                    <td th:text="${dish.rating}"></td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
 
-</body>
+        <div th:if="${dishes.isEmpty()}" class="alert alert-info">
+            <p>No dishes assigned to this chef yet.</p>
+        </div>
+
+        <!-- Back button -->
+        <div class="mt-4">
+            <a th:href="@{/chefs}" class="btn btn-secondary">Back to Chefs</a>
+        </div>
+    </div>
+</div>
 </html>

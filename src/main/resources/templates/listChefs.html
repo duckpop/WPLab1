@@ -1,116 +1,101 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
-<head>
-    <meta charset="utf-8" />
-    <title>Restaurant Chefs - Welcome to Our Restaurant</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
-    <style>
-        body {
-            max-width: 900px;
-            margin: 2rem auto;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        }
-        header h1 {
-            color: #2c3e50;
-            font-weight: 700;
-            text-align: center;
-            margin-bottom: 2rem;
-        }
-        .chef-card {
-            border: 1px solid #dee2e6;
-            border-radius: 0.5rem;
-            padding: 1rem;
-            margin-bottom: 1rem;
-            background-color: #f8f9fa;
-        }
-        .chef-name {
-            font-weight: 600;
-            font-size: 1.2rem;
-        }
-        .chef-bio {
-            color: #6c757d;
-            font-style: italic;
-        }
-        .btn-container {
-            margin-top: 2rem;
-            display: flex;
-            justify-content: center;
-            gap: 1rem;
-        }
-    </style>
-</head>
-<body>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<div th:fragment="listChefs" class="w-100">
+    <div class="container-fluid p-4">
 
-<header>
-    <h1>Welcome to Our Restaurant</h1>
-</header>
+        <!-- Error message -->
+        <div th:if="${error}" class="alert alert-danger">
+            <span th:text="${error}"></span>
+        </div>
 
-<main>
+        <!-- Add Chef button - only ADMIN -->
+        <div class="mb-4" sec:authorize="hasRole('ADMIN')">
+            <a th:href="@{/chefs/chef-form}" class="btn btn-success">
+                <i class="fas fa-plus"></i> Add New Chef
+            </a>
+        </div>
 
-    <section th:if="${chefs != null and !chefs.isEmpty()}">
-        <h2 class="mb-4">Choose a Chef:</h2>
-        <form th:action="@{/dish}" method="post">
-            <div th:each="chef : ${chefs}" class="chef-card d-flex align-items-center">
-                <input class="form-check-input me-3" type="radio" name="chefId" th:value="${chef.id}" id="chefRadio__${chef.id}" />
-                <label class="form-check-label flex-grow-1" th:for="'chefRadio__' + ${chef.id}">
-                    <span class="chef-name" th:text="${chef.firstName} + ' ' + ${chef.lastName}">Chef Name</span><br />
-                    <span class="chef-bio" th:text="${chef.bio}">Chef bio goes here</span>
-                </label>
+        <!-- Select Chef with Radio Buttons -->
+        <div class="card mb-4">
+            <div class="card-header bg-info text-white">
+                <h5 class="mb-0">Select a Chef to View Dishes</h5>
             </div>
-            <div class="mt-3 text-center">
-                <button type="submit" class="btn btn-primary px-4">Submit</button>
-            </div>
-        </form>
-    </section>
+            <div class="card-body">
+                <form th:action="@{/dish}" method="get" id="chefSelectForm">
+                    <div class="row">
+                        <div th:each="chef : ${chefs}" class="col-md-4 mb-3">
+                            <div class="form-check">
+                                <input class="form-check-input"
+                                       type="radio"
+                                       name="chefId"
+                                       th:value="${chef.id}"
+                                       th:id="'chef_' + ${chef.id}">
+                                <label class="form-check-label" th:for="'chef_' + ${chef.id}">
+                                    <strong th:text="${chef.firstName} + ' ' + ${chef.lastName}"></strong>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
 
-    <section th:if="${chefs != null and !chefs.isEmpty()}">
-        <table class="table table-striped">
-            <thead>
-            <tr>
-                <th>First Name</th>
-                <th>Last Name</th>
-                <th>Bio</th>
-                <th>ID</th>
-                <th>Actions</th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr th:each="chef : ${chefs}">
-                <td th:text="${chef.firstName}">First Name</td>
-                <td th:text="${chef.lastName}">Last Name</td>
-                <td th:text="${chef.bio}">Bio</td>
-                <td th:text="${chef.id}">ID</td>
-                <td>
-                    <a th:href="@{'/chefs/chef-form/' + ${chef.id}}" class="btn btn-primary btn-sm">Edit</a>
-
-                    <form th:action="@{'/chefs/delete/' + ${chef.id}}" method="post" style="display:inline;">
-                        <button  type="submit" class="btn btn-danger btn-sm"
-                                onclick="return confirm('Are you sure you want to delete this dish?');">
-                            Delete
+                    <!-- Submit button -->
+                    <div class="mt-3">
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-arrow-right"></i> View Dishes for Selected Chef
                         </button>
-                    </form>
-                </td>
-            </tr>
-            </tbody>
-        </table>
-    </section>
+                    </div>
+                </form>
+            </div>
+        </div>
 
-    <section class="btn-container">
-        <form th:action="@{/dishes}" method="get">
-            <button type="submit" class="btn btn-outline-secondary btn-lg">
-                Edit / Add Dish
-            </button>
-        </form>
-        <form th:action="@{/chefs/chef-form}" method="get">
-        <button type="submit" class="btn btn-outline-secondary btn-lg">
-            Edit / Add Chef
-        </button>
-    </form>
-    </section>
+        <!-- Chefs Table -->
+        <h4 class="mt-4 mb-3">All Chefs</h4>
+        <div class="table-responsive">
+            <table class="table table-striped table-hover">
+                <thead class="table-dark">
+                <tr>
+                    <th>ID</th>
+                    <th>First Name</th>
+                    <th>Last Name</th>
+                    <th>Bio</th>
+                    <th sec:authorize="hasRole('ADMIN')">Actions</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="chef : ${chefs}">
+                    <td th:text="${chef.id}"></td>
+                    <td th:text="${chef.firstName}"></td>
+                    <td th:text="${chef.lastName}"></td>
+                    <td th:text="${chef.bio}"></td>
 
-</main>
+                    <!-- Actions - only ADMIN -->
+                    <td sec:authorize="hasRole('ADMIN')">
+                        <a th:href="@{/chefs/chef-form/{id}(id=${chef.id})}"
+                           class="btn btn-sm btn-warning">
+                            <i class="fas fa-edit"></i> Edit
+                        </a>
+                        <form th:action="@{/chefs/delete/{id}(id=${chef.id})}"
+                              method="post"
+                              style="display: inline;">
+                            <button type="submit"
+                                    class="btn btn-sm btn-danger"
+                                    onclick="return confirm('Delete this chef?')">
+                                <i class="fas fa-trash"></i> Delete
+                            </button>
+                        </form>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
 
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-
-</body>
+        <!-- Empty state -->
+        <div th:if="${chefs.isEmpty()}" class="text-center py-5">
+            <h4>No chefs found</h4>
+            <p sec:authorize="hasRole('ADMIN')">
+                <a th:href="@{/chefs/chef-form}">Add the first chef</a>
+            </p>
+        </div>
+    </div>
+</div>
 </html>

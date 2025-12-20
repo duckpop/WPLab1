@@ -1,12 +1,10 @@
 package mk.ukim.finki.wp.lab.web.controller;
 
 import mk.ukim.finki.wp.lab.model.Chef;
-import mk.ukim.finki.wp.lab.model.Dish;
 import mk.ukim.finki.wp.lab.service.ChefService;
 import org.springframework.ui.Model;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.List;
 
 @Controller
@@ -22,41 +20,43 @@ public class ChefController {
     @GetMapping()
     public String getChefPage(
             @RequestParam(required = false) String error,
-            Model model
-    ) {
+            Model model) {
+
         if(error != null) {
             model.addAttribute("error", error);
         }
 
-        List<Chef> Chefs = chefService.listChefs();
-        model.addAttribute("chefs", Chefs);
-        return "listChefs";
+        List<Chef> chefs = chefService.listChefs();
+        model.addAttribute("chefs", chefs);
+        model.addAttribute("bodyContent", "listChefs");  // ✅ ДОДАДЕНО
+        return "master-template";  // ✅ ПРОМЕНЕНО
     }
 
     @GetMapping("/chef-form/{ID}")
     public String getEditChefForm(
             @PathVariable Long ID,
-            Model model
-    ){
-        Chef d = chefService.findById(ID);
-        model.addAttribute("chef",d);
-        return "chef-form";
+            Model model) {
+
+        Chef chef = chefService.findById(ID);
+        model.addAttribute("chef", chef);
+        model.addAttribute("bodyContent", "chef-form");  // ✅ ДОДАДЕНО
+        return "master-template";  // ✅ ПРОМЕНЕНО
     }
 
     @GetMapping("/chef-form")
-    public String getCreateChefForm(
-            Model model
-    ){
-        model.addAttribute("chef",new Chef());
-        return "chef-form";
+    public String getCreateChefForm(Model model) {
+
+        model.addAttribute("chef", new Chef());
+        model.addAttribute("bodyContent", "chef-form");  // ✅ ДОДАДЕНО
+        return "master-template";  // ✅ ПРОМЕНЕНО
     }
 
     @PostMapping()
     public String saveChef(
             @RequestParam String firstname,
             @RequestParam String lastname,
-            @RequestParam String bio
-    ) {
+            @RequestParam String bio) {
+
         chefService.create(firstname, lastname, bio);
         return "redirect:/chefs";
     }
@@ -66,19 +66,16 @@ public class ChefController {
             @PathVariable Long id,
             @RequestParam String firstname,
             @RequestParam String lastname,
-            @RequestParam String bio
-    ){
+            @RequestParam String bio) {
+
         chefService.update(id, firstname, lastname, bio);
         return "redirect:/chefs";
     }
 
     @PostMapping("/delete/{id}")
-    public String deleteChef(
-            @PathVariable Long id
-    ){
+    public String deleteChef(@PathVariable Long id) {
+
         chefService.delete(id);
         return "redirect:/chefs";
     }
-
-
 }
