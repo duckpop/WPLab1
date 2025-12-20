@@ -10,8 +10,8 @@ public interface DishService {
 
     Dish findByDishId(String dishId);
     Dish findById(Long Id);
-    List<Dish> find(String name, String cuisine, int preparationTime, Rank rank, double rating, int pageNum, int pageSize);
-    Dish create(String dishId, String name, String cuisine, int preparationTime, Rank rank, double rating);
-    Dish update(Long id,String dishId, String name, String cuisine, int preparationTime, Rank rank, double rating);
+    List<Dish> find(String SearchName, Integer preparationTime, Rank rank, Double rating);
+    Dish create(String dishId, String name, String cuisine, Integer preparationTime, Rank rank, Double rating);
+    Dish update(Long id,String dishId, String name, String cuisine, Integer preparationTime, Rank rank, Double rating);
     void delete(Long id);
 }

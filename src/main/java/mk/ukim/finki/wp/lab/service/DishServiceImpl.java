@@ -37,12 +37,12 @@ public class DishServiceImpl implements DishService {
     }
 
     @Override
-    public List<Dish> find( String name, String cuisine, int preparationTime, Rank rank, double rating, int pageNum, int pageSize){
-        Specification<Dish> specification = Specification.allOf(
-                filterContainsText(Dish.class, "name",name)
+    public List<Dish> find( String SearchName, Integer preparationTime, Rank rank, Double rating){
+        Specification<Dish> specification = (Specification.allOf(
+                filterContainsText(Dish.class, "name",SearchName)
         ).or(Specification.allOf(
-                filterContainsText(Dish.class, "cuisine", cuisine)
-        )).and(Specification.not(
+                filterContainsText(Dish.class, "cuisine", SearchName)
+        ))).and(Specification.not(
                 greaterThan(Dish.class, "preparationTime", preparationTime)
         )).and(Specification.allOf(
                 filterEqualsV(Dish.class, "rank", rank),
@@ -55,14 +55,14 @@ public class DishServiceImpl implements DishService {
     }
 
     @Override
-    public Dish create(String dishId, String name, String cuisine, int preparationTime, Rank rank, double rating) {
+    public Dish create(String dishId, String name, String cuisine, Integer preparationTime, Rank rank, Double rating) {
         Dish d = new Dish(dishId,name,cuisine,preparationTime,rank,rating);
         this.dishRepository.save(d);
         return d;
     }
 
     @Override
-    public Dish update(Long id, String dishId, String name, String cuisine, int preparationTime, Rank rank, double rating) {
+    public Dish update(Long id, String dishId, String name, String cuisine, Integer preparationTime, Rank rank, Double rating) {
         Dish d = this.findById(id);
         d.setDishId(dishId);
         d.setName(name);

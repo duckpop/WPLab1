@@ -14,9 +14,9 @@ public class Dish {
     private String dishId;
     private String name;
     private String cuisine;
-    private int preparationTime;
+    private Integer preparationTime;
     private Rank rank;
-    private double rating;
+    private Double rating;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

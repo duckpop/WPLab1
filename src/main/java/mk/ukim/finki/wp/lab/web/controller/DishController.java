@@ -22,22 +22,26 @@ public class DishController {
     @GetMapping()
     public String getDishesPage(
             @RequestParam(required = false) String error,
-            @RequestParam String name,
-            @RequestParam String cuisine,
-            @RequestParam int preparationTime,
-            @RequestParam Rank rank,
-            @RequestParam double rating,
-            @RequestParam(defaultValue = "1") Integer pageNum,
-            @RequestParam(defaultValue = "10") Integer pageSize,
+            @RequestParam(required = false) String name,
+            @RequestParam(required = false) String SearchName,
+            @RequestParam(required = false) String cuisine,
+            @RequestParam(required = false) Integer preparationTime,
+            @RequestParam(required = false) Rank rank,
+            @RequestParam(required = false) Double rating,
             Model model
     ) {
         if(error != null) {
             model.addAttribute("error", error);
         }
 
-        List<Dish> Dishes = dishService.find(name,cuisine,preparationTime,rank,rating,pageNum-1,pageSize);
+        List<Dish> Dishes = dishService.find(SearchName,preparationTime,rank,rating);
         model.addAttribute("dishes", Dishes);
         model.addAttribute("ranks", Rank.values());
+
+        model.addAttribute("nameOrCuisine", SearchName);
+        model.addAttribute("preparationTime", preparationTime);
+        model.addAttribute("Rank", rank);
+        model.addAttribute("rating", rating);
         return "listDishes";
     }
 
